@@ -72,7 +72,7 @@ class MetadataSearch(object):
         _lib.AE_MetadataSearchRequest_SetFingerprint(
             c_req.get(), req.fingerprint._ft.get())
 
-        _lib.AE_MetadataSearch_Do(self._search.get(), c_req.get(),
+        _lib.AE_MetadataSearch_Do(self._c_search.get(), c_req.get(),
                                   c_res.get(), c_status.get())
         AEError.check_status(c_status)
 
@@ -86,15 +86,15 @@ class MetadataSearch(object):
             matches.append(MetadataSearchMatch(
                 asset_id=_lib.AE_MetadataSearchMatch_GetAssetID(c_match.get()),
                 asset_type=AssetType(_lib.AE_MetadataSearchMatch_GetAssetType(c_match.get())),
-                segments=_metadata_search_segments_from_match(c_match)))
+                segments=_extract_metadata_search_segments(c_match)))
 
         return MetadataSearchResult(
-            lookup_id=_lib.AE_MetadataSearchResult_GetAssetID(c_res.get()),
+            lookup_id=_lib.AE_MetadataSearchResult_GetLookupID(c_res.get()),
             completed_at=_lib.AE_MetadataSearchResult_GetCompletedAt(c_res.get()), # TODO: convert to datetime
             matches=matches)
 
 
-def _metadata_search_segments_from_match(c_match):
+def _extract_metadata_search_segments(c_match):
     c_query_start = ctypes.c_int64(0)
     c_query_end = ctypes.c_int64(0)
     c_asset_start = ctypes.c_int64(0)

@@ -40,7 +40,7 @@ class _AE_Fingerprint(ctypes.Structure):
 
 class _AE_Client(ctypes.Structure):
     @staticmethod
-    def new():
+    def new(client_id, client_secret):
         return _SafeObject(
             _lib.AE_Client_New,
             _lib.AE_Client_Delete,
@@ -58,7 +58,7 @@ class _AE_MetadataSearch(ctypes.Structure):
 
 class _AE_MetadataSearchRequest(ctypes.Structure):
     @staticmethod
-    def new(client):
+    def new():
         return _SafeObject(
             _lib.AE_MetadataSearchRequest_New,
             _lib.AE_MetadataSearchRequest_Delete)
@@ -66,7 +66,7 @@ class _AE_MetadataSearchRequest(ctypes.Structure):
 
 class _AE_MetadataSearchResult(ctypes.Structure):
     @staticmethod
-    def new(client):
+    def new():
         return _SafeObject(
             _lib.AE_MetadataSearchResult_New,
             _lib.AE_MetadataSearchResult_Delete)
@@ -74,7 +74,7 @@ class _AE_MetadataSearchResult(ctypes.Structure):
 
 class _AE_MetadataSearchMatch(ctypes.Structure):
     @staticmethod
-    def new(client):
+    def new():
         return _SafeObject(
             _lib.AE_MetadataSearchMatch_New,
             _lib.AE_MetadataSearchMatch_Delete)
