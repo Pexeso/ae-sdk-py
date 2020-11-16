@@ -195,7 +195,10 @@ def _load_lib():
         ctypes.POINTER(ctypes.POINTER(_AE_MetadataSearchRequest))]
     lib.AE_MetadataSearchRequest_Delete.restype = None
 
-    ## TODO: implement the rest
+    lib.AE_MetadataSearchRequest_SetFingerprint.argtypes = [
+        ctypes.POINTER(_AE_MetadataSearchRequest),
+        ctypes.POINTER(_AE_Fingerprint)]
+    lib.AE_MetadataSearchRequest_SetFingerprint.restype = None
 
     # AE_MetadataSearchResult
     lib.AE_MetadataSearchResult_New.argtypes = []
@@ -205,7 +208,19 @@ def _load_lib():
         ctypes.POINTER(ctypes.POINTER(_AE_MetadataSearchResult))]
     lib.AE_MetadataSearchResult_Delete.restype = None
 
-    ## TODO: implement the rest
+    lib.AE_MetadataSearchResult_GetLookupID.argtypes = [
+        POINTER(ctypes.POINTER(_AE_MetadataSearchResult)]
+    lib.AE_MetadataSearchResult_GetLookupID.restype = ctypes.c_uint64
+
+    lib.AE_MetadataSearchResult_GetCompletedAt.argtypes = [
+        ctypes.POINTER(_AE_MetadataSearchResult)]
+    lib.AE_MetadataSearchResult_GetCompletedAt.restype = ctypes.c_uint64
+
+    lib.AE_MetadataSearchResult_NextMatch.argtypes = [
+        ctypes.POINTER(_AE_MetadataSearchResult),
+        ctypes.POINTER(_AE_MetadataSearchMatch),
+        ctypes.POINTER(ctypes.size_t)]
+    lib.AE_MetadataSearchResult_NextMatch.restype = ctypes.c_bool
 
     # AE_MetadataSearchMatch
     lib.AE_MetadataSearchMatch_New.argtypes = []
@@ -215,7 +230,22 @@ def _load_lib():
         ctypes.POINTER(ctypes.POINTER(_AE_MetadataSearchMatch))]
     lib.AE_MetadataSearchMatch_Delete.restype = None
 
-    ## TODO: implement the rest
+    lib.AE_MetadataSearchMatch_GetAssetID.argtypes = [
+        ctypes.POINTER(_AE_MetadataSearchMatch)]
+    lib.AE_MetadataSearchMatch_GetAssetID.restype = ctypes.c_uint64
+
+    lib.AE_MetadataSearchMatch_GetAssetType.argtypes = [
+        ctypes.POINTER(_AE_MetadataSearchMatch)]
+    lib.AE_MetadataSearchMatch_GetAssetType.restype = ctypes.c_int
+
+    lib.AE_MetadataSearchMatch_NextSegment.argtypes = [
+        ctypes.POINTER(_AE_MetadataSearchMatch),
+        ctypes.POINTER(ctypes.c_int64),
+        ctypes.POINTER(ctypes.c_int64),
+        ctypes.POINTER(ctypes.c_int64),
+        ctypes.POINTER(ctypes.c_int64),
+        ctypes.POINTER(ctypes.size_t)]
+    lib.AE_MetadataSearchMatch.restype = ctypes.c_bool
 
     # AE_AssetLibrary
     lib.AE_AssetLibrary_New.argtypes = [ctypes.POINTER(_AE_Client)]
@@ -239,7 +269,10 @@ def _load_lib():
     lib.AE_Asset_Delete.argtypes = [ctypes.POINTER(ctypes.POINTER(_AE_Asset))]
     lib.AE_Asset_Delete.restype = None
 
-    ## TODO: implement the rest
+    lib.AE_Asset_GetMetadata.argtypes = [
+        ctypes.POINTER(ctypes.POINTER(_AE_Asset)),
+        ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata))]
+    lib.AE_Asset_GetMetadata.restype = None
 
     # AE_AssetMetadata
     lib.AE_AssetMetadata_New.argtypes = []
@@ -248,7 +281,31 @@ def _load_lib():
     lib.AE_AssetMetadata_Delete.argtypes = [ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata))]
     lib.AE_AssetMetadata_Delete.restype = None
 
-    ## TODO: implement the rest
+    lib.AE_AssetMetadata_GetISRC.argtypes = [
+            ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata))]
+    lib.AE_AssetMetadata_GetISRC.restype = ctypes.c_char_p
+
+    lib.AE_AssetMetadata_GetTitle.argtypes = [
+            ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata))]
+    lib.AE_AssetMetadata_GetTitle.restype = ctypes.c_char_p
+
+    lib.AE_AssetMetadata_NextArtist.argtypes = [
+        ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata)),
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.size_t)]
+    lib.AE_AssetMetadata_NextArtist.restype = ctypes.c_bool
+
+    lib.AE_AssetMetadata_NextUPC.argtypes = [
+        ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata)),
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.size_t)]
+    lib.AE_AssetMetadata_NextUPC.restype = ctypes.c_bool
+
+    lib.AE_AssetMetadata_NextLicensors.argtypes = [
+        ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata)),
+        ctypes.POINTER(_AE_AssetLicensors),
+        ctypes.POINTER(ctypes.size_t)]
+    lib.AE_AssetMetadata_NextLicensors.restype = ctypes.c_bool
 
     # AE_AssetLicensors
     lib.AE_AssetLicensors_New.argtypes = []
@@ -257,7 +314,15 @@ def _load_lib():
     lib.AE_AssetLicensors_Delete.argtypes = [ctypes.POINTER(ctypes.POINTER(_AE_AssetLicensors))]
     lib.AE_AssetLicensors_Delete.restype = None
 
-    ## TODO: implement the rest
+    lib.AE_AssetLicensors_GetTerritory.argtypes = [
+            ctypes.POINTER(ctypes.POINTER(_AE_AssetLicensors))]
+    lib.AE_AssetLicensors_GetTerritory.restype = ctypes.c_char_p
+
+    lib.AE_AssetLicensors_NextLicensor.argtypes = [
+        ctypes.POINTER(ctypes.POINTER(_AE_AssetLicensors)),
+        ctypes.POINTER(_AE_AssetLicensors),
+        ctypes.POINTER(ctypes.c_char_p)]
+    lib.AE_AssetLicensors_NextLicensor.restype = ctypes.c_bool
 
     return lib
 

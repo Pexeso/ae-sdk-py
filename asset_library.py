@@ -10,6 +10,14 @@ from .lib import _lib, _AE_Status,  _AE_Asset, _AE_AssetMetadata, \
 from .errors import AEError
 
 
+class AssetType(Enum):
+    RECORDING = 0
+    COMPOSITION = 1
+    VIDEO = 2
+    IMAGE = 3
+    TEXT = 4
+
+
 class AssetLicensors(object):
     def __init__(self, asset_id, asset_type, segments):
         self._asset_id = asset_id
@@ -57,5 +65,21 @@ class AssetLibrary(object):
     def __init__(self, client):
         self._library = library
 
-    def get_asset(self, req):
-        pass ## TODO: implement
+    def get_asset(self, kwargs, asset_id):
+        c_status = _AE_Status.new()
+        c_asset = _AE_Asset.new()
+
+        _lib.AE_AssetLibrary_GetAsset(self._library.get(), asset_id,
+                                      c_asset.get(), c_status.get())
+        AEError.check_status(c_status)
+
+        c_metadata = _AE_AssetMetadata.new()
+        _lib.AE_Asset_GetMetadata(c_asset.get(), c_metadata.get())
+
+        return Asset(metadata=AssetMetadata(
+            isrc=_AE_AssetMetadata_GetISRC(c_metadata.get()).decode(),
+            title=_AE_AssetMetadata_GetTitle(c_metadata.get()).decode(),
+            artists=artists,
+            upcs=upcs,
+            licensors=licensors,
+        ))
