@@ -6,7 +6,7 @@ from collections import namedtuple
 from enum import Enum
 
 from .lib import _lib, _AE_Status, _AE_Fingerprint, \
-    _AE_MetadataSearchRequest, _AE_MetadataSearchResult,
+    _AE_MetadataSearchRequest, _AE_MetadataSearchResult, \
     _AE_MetadataSearchMatch
 from .errors import AEError
 from .common import Segment
@@ -86,7 +86,7 @@ class MetadataSearch(object):
             matches.append(MetadataSearchMatch(
                 asset_id=_lib.AE_MetadataSearchMatch_GetAssetID(c_match.get()),
                 asset_type=AssetType(_lib.AE_MetadataSearchMatch_GetAssetType(c_match.get())),
-                segments=_metadata_search_segments_from_match(c_match))
+                segments=_metadata_search_segments_from_match(c_match)))
 
         return MetadataSearchResult(
             lookup_id=_lib.AE_MetadataSearchResult_GetAssetID(c_res.get()),

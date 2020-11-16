@@ -89,6 +89,12 @@ class _AE_AssetLibrary(ctypes.Structure):
             args=[client])
 
 
+class _AE_Asset(ctypes.Structure):
+    @staticmethod
+    def new(client):
+        return _SafeObject(_lib.AE_Asset_New, _lib.AE_Asset_Delete)
+
+
 class _AE_AssetMetadata(ctypes.Structure):
     @staticmethod
     def new(client):
@@ -106,7 +112,7 @@ class _AE_AssetLicensors(ctypes.Structure):
 
 
 def _load_lib():
-    name = ctypes.util.find_library("aesdk")
+    name = ctypes.util.find_library("ae")
 
     try:
         lib = ctypes.CDLL(name)
@@ -209,7 +215,7 @@ def _load_lib():
     lib.AE_MetadataSearchResult_Delete.restype = None
 
     lib.AE_MetadataSearchResult_GetLookupID.argtypes = [
-        POINTER(ctypes.POINTER(_AE_MetadataSearchResult)]
+        ctypes.POINTER(_AE_MetadataSearchResult)]
     lib.AE_MetadataSearchResult_GetLookupID.restype = ctypes.c_uint64
 
     lib.AE_MetadataSearchResult_GetCompletedAt.argtypes = [
@@ -219,7 +225,7 @@ def _load_lib():
     lib.AE_MetadataSearchResult_NextMatch.argtypes = [
         ctypes.POINTER(_AE_MetadataSearchResult),
         ctypes.POINTER(_AE_MetadataSearchMatch),
-        ctypes.POINTER(ctypes.size_t)]
+        ctypes.POINTER(ctypes.c_size_t)]
     lib.AE_MetadataSearchResult_NextMatch.restype = ctypes.c_bool
 
     # AE_MetadataSearchMatch
@@ -244,8 +250,8 @@ def _load_lib():
         ctypes.POINTER(ctypes.c_int64),
         ctypes.POINTER(ctypes.c_int64),
         ctypes.POINTER(ctypes.c_int64),
-        ctypes.POINTER(ctypes.size_t)]
-    lib.AE_MetadataSearchMatch.restype = ctypes.c_bool
+        ctypes.POINTER(ctypes.c_size_t)]
+    lib.AE_MetadataSearchMatch_NextSegment.restype = ctypes.c_bool
 
     # AE_AssetLibrary
     lib.AE_AssetLibrary_New.argtypes = [ctypes.POINTER(_AE_Client)]
@@ -255,12 +261,12 @@ def _load_lib():
         ctypes.POINTER(ctypes.POINTER(_AE_AssetLibrary))]
     lib.AE_AssetLibrary_Delete.restype = None
 
-    lib.AE_AssetLibrary_Do.argtypes = [
+    lib.AE_AssetLibrary_GetAsset.argtypes = [
         ctypes.POINTER(_AE_AssetLibrary),
         ctypes.c_uint64,
         ctypes.POINTER(_AE_Asset),
         ctypes.POINTER(_AE_Status)]
-    lib.AE_AssetLibrary_Do.restype = None
+    lib.AE_AssetLibrary_GetAsset.restype = None
 
     # AE_Asset
     lib.AE_Asset_New.argtypes = []
@@ -292,19 +298,19 @@ def _load_lib():
     lib.AE_AssetMetadata_NextArtist.argtypes = [
         ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata)),
         ctypes.POINTER(ctypes.c_char_p),
-        ctypes.POINTER(ctypes.size_t)]
+        ctypes.POINTER(ctypes.c_size_t)]
     lib.AE_AssetMetadata_NextArtist.restype = ctypes.c_bool
 
     lib.AE_AssetMetadata_NextUPC.argtypes = [
         ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata)),
         ctypes.POINTER(ctypes.c_char_p),
-        ctypes.POINTER(ctypes.size_t)]
+        ctypes.POINTER(ctypes.c_size_t)]
     lib.AE_AssetMetadata_NextUPC.restype = ctypes.c_bool
 
     lib.AE_AssetMetadata_NextLicensors.argtypes = [
         ctypes.POINTER(ctypes.POINTER(_AE_AssetMetadata)),
         ctypes.POINTER(_AE_AssetLicensors),
-        ctypes.POINTER(ctypes.size_t)]
+        ctypes.POINTER(ctypes.c_size_t)]
     lib.AE_AssetMetadata_NextLicensors.restype = ctypes.c_bool
 
     # AE_AssetLicensors
