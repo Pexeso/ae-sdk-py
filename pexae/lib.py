@@ -107,7 +107,7 @@ class _AE_AssetLicensors(ctypes.Structure):
 
 
 def _load_lib():
-    name = ctypes.util.find_library("ae")
+    name = ctypes.util.find_library("pexae")
 
     try:
         lib = ctypes.CDLL(name)
