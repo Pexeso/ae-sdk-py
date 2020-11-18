@@ -1,16 +1,15 @@
-#!/usr/bin/env python3
 # Copyright 2020 Pexeso Inc. All rights reserved.
 
 import ctypes
 from collections import namedtuple
 from enum import Enum
 
-from .lib import _lib, _AE_Status, _AE_Fingerprint, \
+from pexae.lib import _lib, _AE_Status, _AE_Fingerprint, \
     _AE_MetadataSearchRequest, _AE_MetadataSearchResult, \
     _AE_MetadataSearchMatch
-from .errors import AEError
-from .common import Segment
-from .asset_library import AssetType
+from pexae.errors import AEError
+from pexae.common import Segment
+from pexae.asset_library import AssetType
 
 
 class MetadataSearchMatch(object):

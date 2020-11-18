@@ -1,9 +1,8 @@
-#!/usr/bin/env python3
 # Copyright 2020 Pexeso Inc. All rights reserved.
 
 from enum import Enum
 
-from .lib import _lib
+from pexae.lib import _lib
 
 
 class Code(Enum):

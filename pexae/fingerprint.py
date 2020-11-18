@@ -1,10 +1,9 @@
-#!/usr/bin/env python3
 # Copyright 2020 Pexeso Inc. All rights reserved.
 
 import ctypes
 
-from .lib import _lib, _AE_Status, _AE_Buffer, _AE_Fingerprint
-from .errors import AEError
+from pexae.lib import _lib, _AE_Status, _AE_Buffer, _AE_Fingerprint
+from pexae.errors import AEError
 
     
 class Fingerprint(object):

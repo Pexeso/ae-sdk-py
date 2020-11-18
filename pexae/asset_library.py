@@ -1,13 +1,12 @@
-#!/usr/bin/env python3
 # Copyright 2020 Pexeso Inc. All rights reserved.
 
 import ctypes
 from collections import namedtuple
 from enum import Enum
 
-from .lib import _lib, _AE_Status,  _AE_Asset, _AE_AssetMetadata, \
+from pexae.lib import _lib, _AE_Status,  _AE_Asset, _AE_AssetMetadata, \
         _AE_AssetLicensors
-from .errors import AEError
+from pexae.errors import AEError
 
 
 class AssetType(Enum):

@@ -1,9 +1,7 @@
-#!/usr/bin/env python3
 # Copyright 2020 Pexeso Inc. All rights reserved.
 
 import ctypes
 import ctypes.util
-import platform
 
 
 class _SafeObject(object):
@@ -40,11 +38,8 @@ class _AE_Fingerprint(ctypes.Structure):
 
 class _AE_Client(ctypes.Structure):
     @staticmethod
-    def new(client_id, client_secret):
-        return _SafeObject(
-            _lib.AE_Client_New,
-            _lib.AE_Client_Delete,
-            args=[client_id.encode(), client_secret.encode()])
+    def new():
+        return _SafeObject(_lib.AE_Client_New, _lib.AE_Client_Delete)
 
 
 class _AE_MetadataSearch(ctypes.Structure):
@@ -171,12 +166,19 @@ def _load_lib():
     lib.AE_Fingerprint_FromBuffer.restype = None
 
     # AE_Client
-    lib.AE_Client_New.argtypes = [ctypes.c_char_p, ctypes.c_char_p]
+    lib.AE_Client_New.argtypes = []
     lib.AE_Client_New.restype = ctypes.POINTER(_AE_Client)
 
     lib.AE_Client_Delete.argtypes = [
         ctypes.POINTER(ctypes.POINTER(_AE_Client))]
     lib.AE_Client_Delete.restype = None
+
+    lib.AE_Client_Init.argtypes = [
+        ctypes.POINTER(_AE_Client),
+        ctypes.c_char_p,
+        ctypes.c_char_p,
+        ctypes.POINTER(_AE_Status)]
+    lib.AE_Client_Init.restype = None
 
     # AE_MetadataSearch
     lib.AE_MetadataSearch_New.argtypes = [ctypes.POINTER(_AE_Client)]
