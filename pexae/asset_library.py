@@ -17,58 +17,58 @@ class AssetType(Enum):
     TEXT = 4
 
 
-class AssetLicensors(object):
-    def __init__(self, asset_id, asset_type, segments):
-        self._asset_id = asset_id
-        self._asset_type = asset_type
-        self._segments = segments
-
-    @property
-    def asset_id(self):
-        return self._asset_id
-
-    @property
-    def asset_type(self):
-        return self._asset_type
-
-    @property
-    def segments(self):
-        return self._segments
-
-
 class AssetMetadata(object):
-    def __init__(self, lookup_id, completed_at, matches):
-        self._lookup_id = lookup_id
-        self._completed_at = completed_at
-        self._matches = matches
+    def __init__(self, isrc, title, artists, upcs, licensors):
+        self._isrc = isrc
+        self._title = title
+        self._artists = artists
+        self._upcs = upcs
+        self._licensors = licensors
     
     @property
-    def lookup_id(self):
-        return self._lookup_id
+    def isrc(self):
+        return self._isrc
 
     @property
-    def completed_at(self):
-        return self._completed_at
+    def title(self):
+        return self._title
 
     @property
-    def lookup_id(self):
-        return self._lookup_id
+    def artists(self):
+        return self._artists
 
+    @property
+    def upcs(self):
+        return self._upcs
+
+    @property
+    def licensors(self):
+        return self._licensors
+
+    def __repr__(self):
+        return "AssetMetadata(isrc={},title={},artists={},upcs={},licensors={})".format(
+                self.isrc, self.title, self.artists, self.upcs, self.licensors)
 
 class Asset(object):
-    def __init__(self):
-        pass
+    def __init__(self, metadata):
+        self._metadata = metadata
 
+    @property
+    def metadata(self):
+        return self._metadata
+
+    def __repr__(self):
+        return "Asset(metadata=...)"
 
 class AssetLibrary(object):
-    def __init__(self, client):
-        self._library = library
+    def __init__(self, library):
+        self._c_library = library
 
-    def get_asset(self, kwargs, asset_id):
+    def get_asset(self, asset_id):
         c_status = _AE_Status.new()
         c_asset = _AE_Asset.new()
 
-        _lib.AE_AssetLibrary_GetAsset(self._library.get(), asset_id,
+        _lib.AE_AssetLibrary_GetAsset(self._c_library.get(), asset_id,
                                       c_asset.get(), c_status.get())
         AEError.check_status(c_status)
 
@@ -76,9 +76,52 @@ class AssetLibrary(object):
         _lib.AE_Asset_GetMetadata(c_asset.get(), c_metadata.get())
 
         return Asset(metadata=AssetMetadata(
-            isrc=_AE_AssetMetadata_GetISRC(c_metadata.get()).decode(),
-            title=_AE_AssetMetadata_GetTitle(c_metadata.get()).decode(),
-            artists=artists,
-            upcs=upcs,
-            licensors=licensors,
+            isrc=_lib.AE_AssetMetadata_GetISRC(c_metadata.get()).decode(),
+            title=_lib.AE_AssetMetadata_GetTitle(c_metadata.get()).decode(),
+            artists=_extract_artists(c_metadata),
+            upcs=_extract_upcs(c_metadata),
+            licensors=_extract_licensors(c_metadata),
         ))
+
+
+def _extract_artists(c_metadata):
+    artists = []
+    c_artist = ctypes.c_char_p()
+    c_artists_pos = ctypes.c_size_t(0)
+    while _lib.AE_AssetMetadata_NextArtist(c_metadata.get(),
+                                           ctypes.byref(c_artist),
+                                           ctypes.byref(c_artists_pos)):
+        artists.append(c_artist.value.decode())
+    return artists
+
+
+def _extract_upcs(c_metadata):
+    upcs = []
+    c_upc = ctypes.c_char_p()
+    c_upcs_pos = ctypes.c_size_t(0)
+    while _lib.AE_AssetMetadata_NextUPC(c_metadata.get(),
+                                        ctypes.byref(c_upc),
+                                        ctypes.byref(c_upcs_pos)):
+        upcs.append(c_upc.value.decode())
+    return upcs
+
+
+def _extract_licensors(c_metadata):
+    asset_licensors = {}
+    c_asset_licensors = _AE_AssetLicensors.new()
+    c_asset_licensors_pos = ctypes.c_size_t(0)
+    while _lib.AE_AssetMetadata_NextLicensors(
+            c_metadata.get(), c_asset_licensors.get(),
+            ctypes.byref(c_asset_licensors_pos)):
+        licensors = []
+        c_licensor = ctypes.c_char_p()
+        c_licensors_pos = ctypes.c_size_t(0)
+        while _lib.AE_AssetLicensors_NextLicensor(
+                c_asset_licensors.get(), ctypes.byref(c_licensor),
+                ctypes.byref(c_licensors_pos)):
+            licensors.append(c_licensor.value.decode())
+
+        territory = _lib.AE_AssetLicensors_GetTerritory(
+            c_asset_licensors.get()).decode()
+        asset_licensors[territory] = licensors
+    return asset_licensors

@@ -5,7 +5,7 @@ class Segment(object):
         self._query_start = query_start
         self._query_end = query_end
         self._asset_start = asset_start
-        self._asset_start = asset_start
+        self._asset_end = asset_end
 
     @property
     def query_start(self):
@@ -22,3 +22,8 @@ class Segment(object):
     @property
     def asset_end(self):
         return self._asset_end
+
+    def __repr__(self):
+        return "Segment(query_start={},query_end={},asset_start={},asset_end={})".format(
+                self.query_start, self.query_end, self.asset_start, self.asset_end)
+

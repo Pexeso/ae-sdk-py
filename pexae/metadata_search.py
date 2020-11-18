@@ -1,6 +1,7 @@
 # Copyright 2020 Pexeso Inc. All rights reserved.
 
 import ctypes
+from datetime import datetime
 from collections import namedtuple
 from enum import Enum
 
@@ -30,6 +31,10 @@ class MetadataSearchMatch(object):
     def segments(self):
         return self._segments
 
+    def __repr__(self):
+        return "MetadataSearchMatch(asset_id={},asset_type={},segments={})".format(
+                self.asset_id, self.asset_type, self.segments)
+
 
 class MetadataSearchResult(object):
     def __init__(self, lookup_id, completed_at, matches):
@@ -46,8 +51,12 @@ class MetadataSearchResult(object):
         return self._completed_at
 
     @property
-    def lookup_id(self):
-        return self._lookup_id
+    def matches(self):
+        return self._matches
+
+    def __repr__(self):
+        return "MetadataSearchResult(lookup_id={},completed_at={},matches=...)".format(
+                self.lookup_id, self.completed_at)
 
 
 class MetadataSearchRequest(object):
@@ -57,6 +66,9 @@ class MetadataSearchRequest(object):
     @property
     def fingerprint(self):
         return self._fingerprint
+
+    def __repr__(self):
+        return "MetadataSearchRequest(fingerprint=...)"
 
 
 class MetadataSearch(object):
@@ -87,9 +99,12 @@ class MetadataSearch(object):
                 asset_type=AssetType(_lib.AE_MetadataSearchMatch_GetAssetType(c_match.get())),
                 segments=_extract_metadata_search_segments(c_match)))
 
+        completed_at = datetime.fromtimestamp(
+            _lib.AE_MetadataSearchResult_GetCompletedAt(c_res.get()))
+
         return MetadataSearchResult(
             lookup_id=_lib.AE_MetadataSearchResult_GetLookupID(c_res.get()),
-            completed_at=_lib.AE_MetadataSearchResult_GetCompletedAt(c_res.get()), # TODO: convert to datetime
+            completed_at=completed_at,
             matches=matches)
 
 
