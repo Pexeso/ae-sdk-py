@@ -7,8 +7,18 @@ from pexae.errors import AEError
 
     
 class Fingerprint(object):
+    """
+    Fingerprint is how the SDK identifies a piece of digital content.  It can
+    be generated from a media file or from a memory buffer. The content must be
+    encoded in one of the supported formats and must be longer than 1 second.
+    """
+
     @staticmethod
     def from_file(path):
+        """
+        Generate a fingerprint from a file stored on a disk. The parameter to
+        the function must be a path to a valid file in supported format.
+        """
         status = _AE_Status.new()
         ft = _AE_Fingerprint.new()
 
@@ -18,6 +28,10 @@ class Fingerprint(object):
 
     @staticmethod
     def from_buffer(data):
+        """
+        Generate a fingerprint from a media file loaded in memory as a byte
+        buffer.
+        """
         status = _AE_Status.new()
         ft = _AE_Fingerprint.new()
         buf = _AE_Buffer.new()
@@ -30,6 +44,10 @@ class Fingerprint(object):
 
     @staticmethod
     def load(data):
+        """
+        Load a fingerprint previously serialized by the Fingerprint.Dump()
+        function.
+        """
         ft = _AE_Fingerprint.new()
         buf = _AE_Buffer.new()
 
@@ -41,6 +59,11 @@ class Fingerprint(object):
         self._ft = ft
 
     def dump(self):
+        """
+        Serialize the fingerprint into a byte slice so that it can be stored on
+        a disk or in a dabase. It can later be deserialized with the load()
+        function.
+        """
         buf = _AE_Buffer.new()
 
         _lib.AE_Fingerprint_Dump(self._ft.get(), buf.get())

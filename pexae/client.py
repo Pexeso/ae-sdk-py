@@ -15,12 +15,18 @@ class Client(object):
         _lib.AE_Client_Init(c_client.get(), client_id.encode(),
                             client_secret.encode(), c_status.get())
         AEError.check_status(c_status)
+
+        c_asset_library = _AE_AssetLibrary.new(c_client.get())
+        c_metadata_search = _AE_MetadataSearch.new(c_client.get())
+
         self._c_client = c_client
+        self._asset_library = AssetLibrary(c_asset_library)
+        self._metadata_search = MetadataSearch(c_metadata_search)
 
-    def metadata_search(self):
-        s = _AE_MetadataSearch.new(self._c_client.get())
-        return MetadataSearch(s)
-
+    @property
     def asset_library(self):
-        l = _AE_AssetLibrary.new(self._c_client.get())
-        return AssetLibrary(l)
+        return self._asset_library
+
+    @property
+    def metadata_search(self):
+        return self._metadata_search

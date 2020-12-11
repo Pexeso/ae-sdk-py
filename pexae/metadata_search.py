@@ -14,6 +14,9 @@ from pexae.asset_library import AssetType
 
 
 class MetadataSearchMatch(object):
+    """
+    Hi Lea
+    """
     def __init__(self, asset_id, asset_type, segments):
         self._asset_id = asset_id
         self._asset_type = asset_type
@@ -21,6 +24,7 @@ class MetadataSearchMatch(object):
 
     @property
     def asset_id(self):
+        """blablab"""
         return self._asset_id
 
     @property
@@ -37,6 +41,9 @@ class MetadataSearchMatch(object):
 
 
 class MetadataSearchResult(object):
+    """
+    MetadataSearchResult
+    """
     def __init__(self, lookup_id, completed_at, matches):
         self._lookup_id = lookup_id
         self._completed_at = completed_at
@@ -72,6 +79,9 @@ class MetadataSearchRequest(object):
 
 
 class MetadataSearch(object):
+    """
+    MetadataSearch
+    """
     def __init__(self, c_search):
         self._c_search = c_search
 
