@@ -45,8 +45,7 @@ class Fingerprint(object):
     @staticmethod
     def load(data):
         """
-        Load a fingerprint previously serialized by the Fingerprint.Dump()
-        function.
+        Load a fingerprint previously serialized by the :meth:`~dump` function.
         """
         ft = _AE_Fingerprint.new()
         buf = _AE_Buffer.new()
@@ -61,8 +60,8 @@ class Fingerprint(object):
     def dump(self):
         """
         Serialize the fingerprint into a byte slice so that it can be stored on
-        a disk or in a dabase. It can later be deserialized with the load()
-        function.
+        a disk or in a dabase. It can later be deserialized with the
+        :meth:`~load` function.
         """
         buf = _AE_Buffer.new()
 

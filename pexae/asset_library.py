@@ -26,12 +26,12 @@ class AssetMetadata(object):
         self._artists = artists
         self._upcs = upcs
         self._licensors = licensors
-    
+
     @property
     def isrc(self):
         """
-        An international standard code for uniquely identifying sound recordings
-	and music video recordings.
+        An international standard code for uniquely identifying sound
+        recordings and music video recordings.
         """
         return self._isrc
 
@@ -45,22 +45,22 @@ class AssetMetadata(object):
     @property
     def artists(self):
         """
-	The names of the recording artists for a given ISRC.
+        The names of the recording artists for a given ISRC.
         """
         return self._artists
 
     @property
     def upcs(self):
         """
-	The unique codes associated with the sale of a recording.
+        The unique codes associated with the sale of a recording.
         """
         return self._upcs
 
     @property
     def licensors(self):
         """
-	The entities that own the rights to the given UPC and are entitled to
-	license its use and collect royalties.
+        The entities that own the rights to the given UPC and are entitled to
+        license its use and collect royalties.
         """
         return self._licensors
 
@@ -77,7 +77,8 @@ class Asset(object):
     @property
     def metadata(self):
         """
-        The metadata associated with an asset. See :class:`~AssetMetadata` for more information.
+        The metadata associated with an asset. See :class:`~AssetMetadata` for
+        more information.
         """
         return self._metadata
 
@@ -87,7 +88,7 @@ class Asset(object):
 
 class AssetLibrary(object):
     """ TODO """
-    
+
     def __init__(self, library):
         """ TODO """
         self._c_library = library
