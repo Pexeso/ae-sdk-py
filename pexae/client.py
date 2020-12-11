@@ -8,6 +8,8 @@ from pexae.errors import AEError
 
 
 class Client(object):
+    """ TODO """
+    
     def __init__(self, client_id, client_secret):
         c_status = _AE_Status.new()
         c_client = _AE_Client.new()
@@ -25,8 +27,10 @@ class Client(object):
 
     @property
     def asset_library(self):
+        """ TODO """
         return self._asset_library
 
     @property
     def metadata_search(self):
+        """ TODO """
         return self._metadata_search

@@ -14,9 +14,8 @@ from pexae.asset_library import AssetType
 
 
 class MetadataSearchMatch(object):
-    """
-    Hi Lea
-    """
+    """ TODO """
+    
     def __init__(self, asset_id, asset_type, segments):
         self._asset_id = asset_id
         self._asset_type = asset_type
@@ -24,15 +23,17 @@ class MetadataSearchMatch(object):
 
     @property
     def asset_id(self):
-        """blablab"""
+        """ TODO """
         return self._asset_id
 
     @property
     def asset_type(self):
+        """ TODO """
         return self._asset_type
 
     @property
     def segments(self):
+        """ TODO """
         return self._segments
 
     def __repr__(self):
@@ -41,9 +42,7 @@ class MetadataSearchMatch(object):
 
 
 class MetadataSearchResult(object):
-    """
-    MetadataSearchResult
-    """
+    """ TODO """
     def __init__(self, lookup_id, completed_at, matches):
         self._lookup_id = lookup_id
         self._completed_at = completed_at
@@ -51,14 +50,17 @@ class MetadataSearchResult(object):
 
     @property
     def lookup_id(self):
+        """ TODO """
         return self._lookup_id
 
     @property
     def completed_at(self):
+        """ TODO """
         return self._completed_at
 
     @property
     def matches(self):
+        """ TODO """
         return self._matches
 
     def __repr__(self):
@@ -67,11 +69,14 @@ class MetadataSearchResult(object):
 
 
 class MetadataSearchRequest(object):
+    """ TODO """
+    
     def __init__(self, fingerprint):
         self._fingerprint = fingerprint
 
     @property
     def fingerprint(self):
+        """ TODO """
         return self._fingerprint
 
     def __repr__(self):
@@ -79,13 +84,13 @@ class MetadataSearchRequest(object):
 
 
 class MetadataSearch(object):
-    """
-    MetadataSearch
-    """
+    """ TODO """
+    
     def __init__(self, c_search):
         self._c_search = c_search
 
     def do(self, req):
+        """ TODO """
         c_status = _AE_Status.new()
         c_req = _AE_MetadataSearchRequest.new()
         c_res = _AE_MetadataSearchResult.new()

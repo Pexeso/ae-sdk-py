@@ -10,6 +10,8 @@ from pexae.errors import AEError
 
 
 class AssetType(Enum):
+    """ TODO """
+    
     RECORDING = 0
     COMPOSITION = 1
     VIDEO = 2
@@ -27,44 +29,71 @@ class AssetMetadata(object):
     
     @property
     def isrc(self):
+        """
+        An international standard code for uniquely identifying sound recordings
+	and music video recordings.
+        """
         return self._isrc
 
     @property
     def title(self):
+        """
+        The name of the track recording for a given ISRC.
+        """
         return self._title
 
     @property
     def artists(self):
+        """
+	The names of the recording artists for a given ISRC.
+        """
         return self._artists
 
     @property
     def upcs(self):
+        """
+	The unique codes associated with the sale of a recording.
+        """
         return self._upcs
 
     @property
     def licensors(self):
+        """
+	The entities that own the rights to the given UPC and are entitled to
+	license its use and collect royalties.
+        """
         return self._licensors
 
     def __repr__(self):
         return "AssetMetadata(isrc={},title={},artists={},upcs={},licensors={})".format(
                 self.isrc, self.title, self.artists, self.upcs, self.licensors)
 
+
 class Asset(object):
     def __init__(self, metadata):
+        """ TODO """
         self._metadata = metadata
 
     @property
     def metadata(self):
+        """
+        The metadata associated with an asset. See :class:`~AssetMetadata` for more information.
+        """
         return self._metadata
 
     def __repr__(self):
         return "Asset(metadata=...)"
 
+
 class AssetLibrary(object):
+    """ TODO """
+    
     def __init__(self, library):
+        """ TODO """
         self._c_library = library
 
     def get_asset(self, asset_id):
+        """ TODO """
         c_status = _AE_Status.new()
         c_asset = _AE_Asset.new()
 
