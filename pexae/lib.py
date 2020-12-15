@@ -145,6 +145,12 @@ def _load_lib():
         ctypes.c_size_t]
     lib.AE_Buffer_Set.restype = None
 
+    lib.AE_Buffer_GetData.argtypes = [ctypes.POINTER(_AE_Buffer)]
+    lib.AE_Buffer_GetData.restype = ctypes.c_void_p
+
+    lib.AE_Buffer_GetSize.argtypes = [ctypes.POINTER(_AE_Buffer)]
+    lib.AE_Buffer_GetSize.restype = ctypes.c_size_t
+
     # AE_Fingerprint
     lib.AE_Fingerprint_New.argtypes = []
     lib.AE_Fingerprint_New.restype = ctypes.POINTER(_AE_Fingerprint)

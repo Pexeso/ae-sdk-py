@@ -19,43 +19,43 @@ class Fingerprint(object):
         Generate a fingerprint from a file stored on a disk. The parameter to
         the function must be a path to a valid file in supported format.
         """
-        status = _AE_Status.new()
-        ft = _AE_Fingerprint.new()
+        c_status = _AE_Status.new()
+        c_ft = _AE_Fingerprint.new()
 
-        _lib.AE_Fingerprint_FromFile(ft.get(), path.encode(), status.get())
-        AEError.check_status(status)
-        return Fingerprint(ft)
+        _lib.AE_Fingerprint_FromFile(c_ft.get(), path.encode(), c_status.get())
+        AEError.check_status(c_status)
+        return Fingerprint(c_ft)
 
     @staticmethod
-    def from_buffer(data):
+    def from_buffer(buf):
         """
         Generate a fingerprint from a media file loaded in memory as a byte
         buffer.
         """
-        status = _AE_Status.new()
-        ft = _AE_Fingerprint.new()
-        buf = _AE_Buffer.new()
+        c_status = _AE_Status.new()
+        c_ft = _AE_Fingerprint.new()
+        c_buf = _AE_Buffer.new()
 
-        _lib.AE_Buffer_Set(buf.get(), data, len(data))
+        _lib.AE_Buffer_Set(c_buf.get(), buf, len(buf))
 
-        _lib.AE_Fingerprint_FromBuffer(ft.get(), buf.get(), status.get())
-        AEError.check_status(status)
-        return Fingerprint(ft)
+        _lib.AE_Fingerprint_FromBuffer(c_ft.get(), c_buf.get(), c_status.get())
+        AEError.check_status(c_status)
+        return Fingerprint(c_ft)
 
     @staticmethod
     def load(data):
         """
         Load a fingerprint previously serialized by the :meth:`~dump` function.
         """
-        ft = _AE_Fingerprint.new()
-        buf = _AE_Buffer.new()
+        c_ft = _AE_Fingerprint.new()
+        c_buf = _AE_Buffer.new()
 
-        _lib.AE_Buffer_Set(buf.get(), data, len(data))
-        _lib.AE_Fingerprint_Load(ft.get(), buf.get())
-        return Fingerprint(ft)
+        _lib.AE_Buffer_Set(c_buf.get(), data, len(data))
+        _lib.AE_Fingerprint_Load(c_ft.get(), c_buf.get())
+        return Fingerprint(c_ft)
 
-    def __init__(self, ft):
-        self._ft = ft
+    def __init__(self, c_ft):
+        self._c_ft = c_ft
 
     def dump(self):
         """
@@ -63,9 +63,9 @@ class Fingerprint(object):
         a disk or in a dabase. It can later be deserialized with the
         :meth:`~load` function.
         """
-        buf = _AE_Buffer.new()
+        c_buf = _AE_Buffer.new()
 
-        _lib.AE_Fingerprint_Dump(self._ft.get(), buf.get())
-        data = _lib.AE_Buffer_GetData(buf.get())
-        size = _lib.AE_Buffer_GetSize(buf.get())
+        _lib.AE_Fingerprint_Dump(self._c_ft.get(), c_buf.get())
+        data = _lib.AE_Buffer_GetData(c_buf.get())
+        size = _lib.AE_Buffer_GetSize(c_buf.get())
         return ctypes.string_at(data, size)

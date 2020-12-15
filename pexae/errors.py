@@ -18,18 +18,32 @@ class Code(Enum):
 
 
 class AEError(RuntimeError):
+    """
+    TODO
+    """
+
     @staticmethod
-    def check_status(status):
-        if not _lib.AE_Status_OK(status.get()):
-            raise AEError.from_status(status)
+    def check_status(c_status):
+        if not _lib.AE_Status_OK(c_status.get()):
+            raise AEError.from_status(c_status)
         
     @staticmethod
-    def from_status(status):
-        code = _lib.AE_Status_GetCode(status.get())
-        message = _lib.AE_Status_GetMessage(status.get())
+    def from_status(c_status):
+        code = _lib.AE_Status_GetCode(c_status.get())
+        message = _lib.AE_Status_GetMessage(c_status.get())
         return AEError(Code(code), message.decode())
 
     def __init__(self, code, message):
         super().__init__("{}: {}".format(code, message))
-        self.code = Code(code)
-        self.message = message
+        self._code = Code(code)
+        self._message = message
+
+    @property
+    def code(self):
+        """ TODO """
+        return self._code
+
+    @property
+    def message(self):
+        """ TODO """
+        return self._message
