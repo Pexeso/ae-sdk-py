@@ -11,7 +11,7 @@ from pexae.errors import AEError
 
 class AssetType(Enum):
     """ TODO """
-    
+
     RECORDING = 0
     COMPOSITION = 1
     VIDEO = 2

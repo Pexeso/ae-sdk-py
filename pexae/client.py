@@ -27,10 +27,18 @@ class Client(object):
 
     @property
     def asset_library(self):
-        """ TODO """
+        """
+        An instance of the :class:`~pexae.AssetLibrary` class. All calls going
+        through this instance will use the client's connection and
+        authentication.
+        """
         return self._asset_library
 
     @property
     def metadata_search(self):
-        """ TODO """
+        """
+        An instance of the :class:`~pexae.MetadataSearch` class. All calls
+        going through this instance will use the client's connection and
+        authentication.
+        """
         return self._metadata_search

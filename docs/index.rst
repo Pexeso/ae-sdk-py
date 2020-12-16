@@ -73,12 +73,33 @@ API reference
 Error handling
 **************
 
-Introduction to error handling.
+All error handling in the SDK is done by raising an instance of
+:class:`~pexae.AEError`. Each error is identified by a code that can help you
+understand why the error was raised in a first place.
+
+Example:
+
+
+.. code-block:: python
+
+    import pexae
+
+    try:
+        ft = pexae.Fingerprint.from_file("/path/to/file.mp4")
+        # ...
+    except pexae.AEError as err:
+        if err.code == pexae.Code.INVALID_INPUT:
+            print("the file is invalid")
+        # ...
 
 
 API reference
 -------------
 
+.. autoclass:: pexae.Code()
+   :members:
+   :undoc-members:
+   :member-order: bysource
 .. autoclass:: pexae.AEError()
    :members:
 
@@ -96,7 +117,7 @@ initialize a client and authenticate:
     try:
         client = pexae.Client("__client__", "__secret__")
     except pexae.AEError as err:
-        # handle error
+        pass  # handle error
 
 
 API reference
@@ -118,7 +139,7 @@ The asset library is used for retrieving information about assets:
         asset = client.asset_library.get_asset(asset_id)
         print("retrieved info about: {}".format(asset.metadata.title))
     except pexae.AEError as err:
-        # handle error
+        pass  # handle error
 
 
 API reference
@@ -148,7 +169,7 @@ metadata search requests:
         res = client.metadata_search.do(req)
         print("lookup {} returned {} matches".format(res.lookup_id, len(res.matches)))
     except pexae.AEError as err:
-        # handle error
+        pass  # handle error
 
 
 API reference

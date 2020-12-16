@@ -96,7 +96,7 @@ class MetadataSearch(object):
         c_res = _AE_MetadataSearchResult.new()
 
         _lib.AE_MetadataSearchRequest_SetFingerprint(
-            c_req.get(), req.fingerprint._ft.get())
+            c_req.get(), req.fingerprint._c_ft.get())
 
         _lib.AE_MetadataSearch_Do(self._c_search.get(), c_req.get(),
                                   c_res.get(), c_status.get())

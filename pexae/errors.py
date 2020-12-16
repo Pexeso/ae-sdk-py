@@ -6,6 +6,10 @@ from pexae.lib import _lib
 
 
 class Code(Enum):
+    """
+    Error codes that are associated with :class:`~AEError`.
+    """
+
     OK = 0
     DEADLINE_EXCEEDED = 1
     PERMISSION_DENIED = 2
@@ -19,7 +23,7 @@ class Code(Enum):
 
 class AEError(RuntimeError):
     """
-    TODO
+    An instance of this class will be raised by a number of the SDK calls.
     """
 
     @staticmethod
@@ -40,10 +44,15 @@ class AEError(RuntimeError):
 
     @property
     def code(self):
-        """ TODO """
+        """
+        An error code that can be used to determine why the error was raised.
+        See :class:`~Code` to find out what codes are available.
+        """
         return self._code
 
     @property
     def message(self):
-        """ TODO """
+        """
+        Human readable error message. Mostly useful for logging and debugging.
+        """
         return self._message
