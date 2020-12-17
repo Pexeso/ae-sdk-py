@@ -42,6 +42,31 @@ class _AE_Client(ctypes.Structure):
         return _SafeObject(_lib.AE_Client_New, _lib.AE_Client_Delete)
 
 
+class _AE_LicenseSearch(ctypes.Structure):
+    @staticmethod
+    def new(client):
+        return _SafeObject(
+            _lib.AE_LicenseSearch_New,
+            _lib.AE_LicenseSearch_Delete,
+            args=[client])
+
+
+class _AE_LicenseSearchRequest(ctypes.Structure):
+    @staticmethod
+    def new():
+        return _SafeObject(
+            _lib.AE_LicenseSearchRequest_New,
+            _lib.AE_LicenseSearchRequest_Delete)
+
+
+class _AE_LicenseSearchResult(ctypes.Structure):
+    @staticmethod
+    def new():
+        return _SafeObject(
+            _lib.AE_LicenseSearchResult_New,
+            _lib.AE_LicenseSearchResult_Delete)
+
+
 class _AE_MetadataSearch(ctypes.Structure):
     @staticmethod
     def new(client):
@@ -185,6 +210,56 @@ def _load_lib():
         ctypes.c_char_p,
         ctypes.POINTER(_AE_Status)]
     lib.AE_Client_Init.restype = None
+
+    # AE_LicenseSearch
+    lib.AE_LicenseSearch_New.argtypes = [ctypes.POINTER(_AE_Client)]
+    lib.AE_LicenseSearch_New.restype = ctypes.POINTER(_AE_LicenseSearch)
+
+    lib.AE_LicenseSearch_Delete.argtypes = [
+        ctypes.POINTER(ctypes.POINTER(_AE_LicenseSearch))]
+    lib.AE_LicenseSearch_Delete.restype = None
+
+    lib.AE_LicenseSearch_Do.argtypes = [
+        ctypes.POINTER(_AE_LicenseSearch),
+        ctypes.POINTER(_AE_LicenseSearchRequest),
+        ctypes.POINTER(_AE_LicenseSearchResult),
+        ctypes.POINTER(_AE_Status)]
+    lib.AE_LicenseSearch_Do.restype = None
+
+    # AE_LicenseSearchRequest
+    lib.AE_LicenseSearchRequest_New.argtypes = []
+    lib.AE_LicenseSearchRequest_New.restype = ctypes.POINTER(_AE_LicenseSearchRequest)
+
+    lib.AE_LicenseSearchRequest_Delete.argtypes = [
+        ctypes.POINTER(ctypes.POINTER(_AE_LicenseSearchRequest))]
+    lib.AE_LicenseSearchRequest_Delete.restype = None
+
+    lib.AE_LicenseSearchRequest_SetFingerprint.argtypes = [
+        ctypes.POINTER(_AE_LicenseSearchRequest),
+        ctypes.POINTER(_AE_Fingerprint)]
+    lib.AE_LicenseSearchRequest_SetFingerprint.restype = None
+
+    # AE_LicenseSearchResult
+    lib.AE_LicenseSearchResult_New.argtypes = []
+    lib.AE_LicenseSearchResult_New.restype = ctypes.POINTER(_AE_LicenseSearchResult)
+
+    lib.AE_LicenseSearchResult_Delete.argtypes = [
+        ctypes.POINTER(ctypes.POINTER(_AE_LicenseSearchResult))]
+    lib.AE_LicenseSearchResult_Delete.restype = None
+
+    lib.AE_LicenseSearchResult_GetLookupID.argtypes = [
+        ctypes.POINTER(_AE_LicenseSearchResult)]
+    lib.AE_LicenseSearchResult_GetLookupID.restype = ctypes.c_uint64
+
+    lib.AE_LicenseSearchResult_GetCompletedAt.argtypes = [
+        ctypes.POINTER(_AE_LicenseSearchResult)]
+    lib.AE_LicenseSearchResult_GetCompletedAt.restype = ctypes.c_uint64
+
+    lib.AE_LicenseSearchResult_NextRestrictedTerritory.argtypes = [
+        ctypes.POINTER(_AE_LicenseSearchResult),
+        ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_size_t)]
+    lib.AE_LicenseSearchResult_NextRestrictedTerritory.restype = ctypes.c_bool
 
     # AE_MetadataSearch
     lib.AE_MetadataSearch_New.argtypes = [ctypes.POINTER(_AE_Client)]
