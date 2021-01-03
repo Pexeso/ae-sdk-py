@@ -12,12 +12,19 @@ from pexae.common import Segment
 from pexae.asset_library import AssetType
 
 
+class BasicLicense(Enum):
+    """ TODO """
+
+    ALLOW = 0
+    BLOCK = 1
+
+
 class LicenseSearchResult(object):
     """ TODO """
-    def __init__(self, lookup_id, completed_at, restricted_countries):
+    def __init__(self, lookup_id, completed_at, policies):
         self._lookup_id = lookup_id
         self._completed_at = completed_at
-        self._restricted_countries = restricted_countries
+        self._policies = policies
 
     @property
     def lookup_id(self):
@@ -30,13 +37,13 @@ class LicenseSearchResult(object):
         return self._completed_at
 
     @property
-    def restricted_countries(self):
+    def policies(self):
         """ TODO """
-        return self._restricted_countries
+        return self._policies
 
     def __repr__(self):
-        return "LicenseSearchResult(lookup_id={},completed_at={},restricted_countries={})".format(
-                self.lookup_id, self.completed_at, self.restricted_countries)
+        return "LicenseSearchResult(lookup_id={},completed_at={},policies={})".format(
+                self.lookup_id, self.completed_at, self.policies)
 
 
 class LicenseSearchRequest(object):
@@ -73,15 +80,17 @@ class LicenseSearch(object):
                                   c_res.get(), c_status.get())
         AEError.check_status(c_status)
 
-        restricted_countries = []
-        c_restricted_country = ctypes.c_char_p()
-        c_restricted_countries_pos = ctypes.c_size_t(0)
+        policies = {}
+        c_territory = ctypes.c_char_p()
+        c_policy = ctypes.c_int()
+        c_policies_pos = ctypes.c_size_t(0)
 
-        while _lib.AE_LicenseSearchResult_NextRestrictedTerritory(
+        while _lib.AE_LicenseSearchResult_NextPolicy(
                 c_res.get(),
-                ctypes.byref(c_restricted_country),
-                ctypes.byref(c_restricted_countries_pos)):
-            restricted_countries.append(c_restricted_country.value.decode())
+                ctypes.byref(c_territory),
+                ctypes.byref(c_policy),
+                ctypes.byref(c_policies_pos)):
+            policies[c_territory.value.decode()] = BasicPolicy(c_policy)
 
         completed_at = datetime.fromtimestamp(
             _lib.AE_LicenseSearchResult_GetCompletedAt(c_res.get()))

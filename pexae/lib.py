@@ -255,11 +255,12 @@ def _load_lib():
         ctypes.POINTER(_AE_LicenseSearchResult)]
     lib.AE_LicenseSearchResult_GetCompletedAt.restype = ctypes.c_uint64
 
-    lib.AE_LicenseSearchResult_NextRestrictedTerritory.argtypes = [
+    lib.AE_LicenseSearchResult_NextPolicy.argtypes = [
         ctypes.POINTER(_AE_LicenseSearchResult),
         ctypes.POINTER(ctypes.c_char_p),
+        ctypes.POINTER(ctypes.c_int),
         ctypes.POINTER(ctypes.c_size_t)]
-    lib.AE_LicenseSearchResult_NextRestrictedTerritory.restype = ctypes.c_bool
+    lib.AE_LicenseSearchResult_NextPolicy.restype = ctypes.c_bool
 
     # AE_MetadataSearch
     lib.AE_MetadataSearch_New.argtypes = [ctypes.POINTER(_AE_Client)]
