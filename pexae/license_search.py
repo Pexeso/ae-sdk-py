@@ -12,7 +12,7 @@ from pexae.common import Segment
 from pexae.asset_library import AssetType
 
 
-class BasicLicense(Enum):
+class BasicPolicy(Enum):
     """ TODO """
 
     ALLOW = 0
@@ -90,7 +90,7 @@ class LicenseSearch(object):
                 ctypes.byref(c_territory),
                 ctypes.byref(c_policy),
                 ctypes.byref(c_policies_pos)):
-            policies[c_territory.value.decode()] = BasicPolicy(c_policy)
+            policies[c_territory.value.decode()] = BasicPolicy(c_policy.value)
 
         completed_at = datetime.fromtimestamp(
             _lib.AE_LicenseSearchResult_GetCompletedAt(c_res.get()))
@@ -98,4 +98,4 @@ class LicenseSearch(object):
         return LicenseSearchResult(
             lookup_id=_lib.AE_LicenseSearchResult_GetLookupID(c_res.get()),
             completed_at=completed_at,
-            restricted_countries=set(restricted_countries))
+            policies=policies)
