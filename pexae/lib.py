@@ -20,115 +20,115 @@ class _SafeObject(object):
 
 class _AE_Status(ctypes.Structure):
     @staticmethod
-    def new():
-        return _SafeObject(_lib.AE_Status_New, _lib.AE_Status_Delete)
+    def new(lib):
+        return _SafeObject(lib.AE_Status_New, lib.AE_Status_Delete)
 
 
 class _AE_Buffer(ctypes.Structure):
     @staticmethod
-    def new():
-        return _SafeObject(_lib.AE_Buffer_New, _lib.AE_Buffer_Delete)
+    def new(lib):
+        return _SafeObject(lib.AE_Buffer_New, lib.AE_Buffer_Delete)
 
 
 class _AE_Fingerprint(ctypes.Structure):
     @staticmethod
-    def new():
-        return _SafeObject(_lib.AE_Fingerprint_New, _lib.AE_Fingerprint_Delete)
+    def new(lib):
+        return _SafeObject(lib.AE_Fingerprint_New, lib.AE_Fingerprint_Delete)
 
 
 class _AE_Client(ctypes.Structure):
     @staticmethod
-    def new():
-        return _SafeObject(_lib.AE_Client_New, _lib.AE_Client_Delete)
+    def new(lib):
+        return _SafeObject(lib.AE_Client_New, lib.AE_Client_Delete)
 
 
 class _AE_LicenseSearch(ctypes.Structure):
     @staticmethod
-    def new(client):
+    def new(lib, client):
         return _SafeObject(
-            _lib.AE_LicenseSearch_New,
-            _lib.AE_LicenseSearch_Delete,
+            lib.AE_LicenseSearch_New,
+            lib.AE_LicenseSearch_Delete,
             args=[client])
 
 
 class _AE_LicenseSearchRequest(ctypes.Structure):
     @staticmethod
-    def new():
+    def new(lib):
         return _SafeObject(
-            _lib.AE_LicenseSearchRequest_New,
-            _lib.AE_LicenseSearchRequest_Delete)
+            lib.AE_LicenseSearchRequest_New,
+            lib.AE_LicenseSearchRequest_Delete)
 
 
 class _AE_LicenseSearchResult(ctypes.Structure):
     @staticmethod
-    def new():
+    def new(lib):
         return _SafeObject(
-            _lib.AE_LicenseSearchResult_New,
-            _lib.AE_LicenseSearchResult_Delete)
+            lib.AE_LicenseSearchResult_New,
+            lib.AE_LicenseSearchResult_Delete)
 
 
 class _AE_MetadataSearch(ctypes.Structure):
     @staticmethod
-    def new(client):
+    def new(lib, client):
         return _SafeObject(
-            _lib.AE_MetadataSearch_New,
-            _lib.AE_MetadataSearch_Delete,
+            lib.AE_MetadataSearch_New,
+            lib.AE_MetadataSearch_Delete,
             args=[client])
 
 
 class _AE_MetadataSearchRequest(ctypes.Structure):
     @staticmethod
-    def new():
+    def new(lib):
         return _SafeObject(
-            _lib.AE_MetadataSearchRequest_New,
-            _lib.AE_MetadataSearchRequest_Delete)
+            lib.AE_MetadataSearchRequest_New,
+            lib.AE_MetadataSearchRequest_Delete)
 
 
 class _AE_MetadataSearchResult(ctypes.Structure):
     @staticmethod
-    def new():
+    def new(lib):
         return _SafeObject(
-            _lib.AE_MetadataSearchResult_New,
-            _lib.AE_MetadataSearchResult_Delete)
+            lib.AE_MetadataSearchResult_New,
+            lib.AE_MetadataSearchResult_Delete)
 
 
 class _AE_MetadataSearchMatch(ctypes.Structure):
     @staticmethod
-    def new():
+    def new(lib):
         return _SafeObject(
-            _lib.AE_MetadataSearchMatch_New,
-            _lib.AE_MetadataSearchMatch_Delete)
+            lib.AE_MetadataSearchMatch_New,
+            lib.AE_MetadataSearchMatch_Delete)
 
 
 class _AE_AssetLibrary(ctypes.Structure):
     @staticmethod
-    def new(client):
+    def new(lib, client):
         return _SafeObject(
-            _lib.AE_AssetLibrary_New,
-            _lib.AE_AssetLibrary_Delete,
+            lib.AE_AssetLibrary_New,
+            lib.AE_AssetLibrary_Delete,
             args=[client])
 
 
 class _AE_Asset(ctypes.Structure):
     @staticmethod
-    def new():
-        return _SafeObject(_lib.AE_Asset_New, _lib.AE_Asset_Delete)
+    def new(lib):
+        return _SafeObject(lib.AE_Asset_New, lib.AE_Asset_Delete)
 
 
 class _AE_AssetMetadata(ctypes.Structure):
     @staticmethod
-    def new():
+    def new(lib):
         return _SafeObject(
-            _lib.AE_AssetMetadata_New,
-            _lib.AE_AssetMetadata_Delete)
+            lib.AE_AssetMetadata_New,
+            lib.AE_AssetMetadata_Delete)
 
 
 class _AE_AssetLicensors(ctypes.Structure):
     @staticmethod
-    def new():
+    def new(lib):
         return _SafeObject(
-            _lib.AE_AssetLicensors_New,
-            _lib.AE_AssetLicensors_Delete)
+            lib.AE_AssetLicensors_New,
+            lib.AE_AssetLicensors_Delete)
 
 
 def _load_lib():
@@ -138,6 +138,10 @@ def _load_lib():
         lib = ctypes.CDLL(name)
     except Exception:
         raise RuntimeError('failed to load native library')
+
+    # AE_Init
+    lib.AE_Init.argtypes = [ctypes.POINTER(_AE_Status)]
+    lib.AE_Init.restype = None
 
     # AE_Status
     lib.AE_Status_New.argtypes = []
@@ -416,6 +420,12 @@ def _load_lib():
         ctypes.POINTER(ctypes.c_size_t)]
     lib.AE_AssetLicensors_NextLicensor.restype = ctypes.c_bool
 
+    # Initialize and return the library
+    c_status = _AE_Status.new(lib)
+    lib.AE_Init(c_status.get())
+
+    if not lib.AE_Status_OK(c_status.get()):
+        raise RuntimeError("failed to initialize library")
     return lib
 
 

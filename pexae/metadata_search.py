@@ -91,9 +91,9 @@ class MetadataSearch(object):
 
     def do(self, req):
         """ TODO """
-        c_status = _AE_Status.new()
-        c_req = _AE_MetadataSearchRequest.new()
-        c_res = _AE_MetadataSearchResult.new()
+        c_status = _AE_Status.new(_lib)
+        c_req = _AE_MetadataSearchRequest.new(_lib)
+        c_res = _AE_MetadataSearchResult.new(_lib)
 
         _lib.AE_MetadataSearchRequest_SetFingerprint(
             c_req.get(), req.fingerprint._c_ft.get())
@@ -103,7 +103,7 @@ class MetadataSearch(object):
         AEError.check_status(c_status)
 
         # extract the result
-        c_match = _AE_MetadataSearchMatch.new()
+        c_match = _AE_MetadataSearchMatch.new(_lib)
         c_matches_pos = ctypes.c_size_t(0)
 
         matches = []

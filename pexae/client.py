@@ -12,16 +12,16 @@ class Client(object):
     """ TODO """
     
     def __init__(self, client_id, client_secret):
-        c_status = _AE_Status.new()
-        c_client = _AE_Client.new()
+        c_status = _AE_Status.new(_lib)
+        c_client = _AE_Client.new(_lib)
 
         _lib.AE_Client_Init(c_client.get(), client_id.encode(),
                             client_secret.encode(), c_status.get())
         AEError.check_status(c_status)
 
-        c_asset_library = _AE_AssetLibrary.new(c_client.get())
-        c_license_search = _AE_LicenseSearch.new(c_client.get())
-        c_metadata_search = _AE_MetadataSearch.new(c_client.get())
+        c_asset_library = _AE_AssetLibrary.new(_lib, c_client.get())
+        c_license_search = _AE_LicenseSearch.new(_lib, c_client.get())
+        c_metadata_search = _AE_MetadataSearch.new(_lib, c_client.get())
 
         self._c_client = c_client
         self._asset_library = AssetLibrary(c_asset_library)

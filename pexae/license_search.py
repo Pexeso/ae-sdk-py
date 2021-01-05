@@ -69,9 +69,9 @@ class LicenseSearch(object):
 
     def do(self, req):
         """ TODO """
-        c_status = _AE_Status.new()
-        c_req = _AE_LicenseSearchRequest.new()
-        c_res = _AE_LicenseSearchResult.new()
+        c_status = _AE_Status.new(_lib)
+        c_req = _AE_LicenseSearchRequest.new(_lib)
+        c_res = _AE_LicenseSearchResult.new(_lib)
 
         _lib.AE_LicenseSearchRequest_SetFingerprint(
             c_req.get(), req.fingerprint._c_ft.get())

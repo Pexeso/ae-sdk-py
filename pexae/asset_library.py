@@ -95,14 +95,14 @@ class AssetLibrary(object):
 
     def get_asset(self, asset_id):
         """ TODO """
-        c_status = _AE_Status.new()
-        c_asset = _AE_Asset.new()
+        c_status = _AE_Status.new(_lib)
+        c_asset = _AE_Asset.new(_lib)
 
         _lib.AE_AssetLibrary_GetAsset(self._c_library.get(), asset_id,
                                       c_asset.get(), c_status.get())
         AEError.check_status(c_status)
 
-        c_metadata = _AE_AssetMetadata.new()
+        c_metadata = _AE_AssetMetadata.new(_lib)
         _lib.AE_Asset_GetMetadata(c_asset.get(), c_metadata.get())
 
         return Asset(metadata=AssetMetadata(
@@ -138,7 +138,7 @@ def _extract_upcs(c_metadata):
 
 def _extract_licensors(c_metadata):
     asset_licensors = {}
-    c_asset_licensors = _AE_AssetLicensors.new()
+    c_asset_licensors = _AE_AssetLicensors.new(_lib)
     c_asset_licensors_pos = ctypes.c_size_t(0)
     while _lib.AE_AssetMetadata_NextLicensors(
             c_metadata.get(), c_asset_licensors.get(),
