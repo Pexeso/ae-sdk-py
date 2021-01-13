@@ -89,24 +89,12 @@ class MetadataSearchFuture(object):
     def __init__(self, c_fut):
         self._c_fut = c_fut
 
-    def poll(self):
-        c_status = _AE_Status.new(_lib)
-        c_res = _AE_MetadataSearchResult.new(_lib)
-
-        _lib.AE_MetadataSearchFuture_Poll(self._c_fut.get(), c_res.get(),
-                                          c_status.get())
-        return self._process_result(c_status, c_res)
-
-
     def get(self):
         c_status = _AE_Status.new(_lib)
         c_res = _AE_MetadataSearchResult.new(_lib)
 
         _lib.AE_MetadataSearchFuture_Get(self._c_fut.get(), c_res.get(),
                                          c_status.get())
-        return self._process_result(c_status, c_res)
-
-    def _process_result(self, c_status, c_res):
         AEError.check_status(c_status)
 
         c_match = _AE_MetadataSearchMatch.new(_lib)

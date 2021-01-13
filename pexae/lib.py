@@ -255,13 +255,6 @@ def _load_lib():
         ctypes.POINTER(ctypes.POINTER(_AE_LicenseSearchFuture))]
     lib.AE_LicenseSearchFuture_Delete.restype = None
 
-    lib.AE_LicenseSearchFuture_Poll.argtypes = [
-        ctypes.POINTER(_AE_LicenseSearchFuture),
-        ctypes.POINTER(_AE_LicenseSearchResult),
-        ctypes.POINTER(_AE_Status)]
-    lib.AE_LicenseSearchFuture_Poll.restype = None
-
-
     lib.AE_LicenseSearchFuture_Get.argtypes = [
         ctypes.POINTER(_AE_LicenseSearchFuture),
         ctypes.POINTER(_AE_LicenseSearchResult),
@@ -326,12 +319,6 @@ def _load_lib():
     lib.AE_MetadataSearchFuture_Delete.argtypes = [
         ctypes.POINTER(ctypes.POINTER(_AE_MetadataSearchFuture))]
     lib.AE_MetadataSearchFuture_Delete.restype = None
-
-    lib.AE_MetadataSearchFuture_Poll.argtypes = [
-        ctypes.POINTER(_AE_MetadataSearchFuture),
-        ctypes.POINTER(_AE_MetadataSearchResult),
-        ctypes.POINTER(_AE_Status)]
-    lib.AE_MetadataSearchFuture_Poll.restype = None
 
     lib.AE_MetadataSearchFuture_Get.argtypes = [
         ctypes.POINTER(_AE_MetadataSearchFuture),

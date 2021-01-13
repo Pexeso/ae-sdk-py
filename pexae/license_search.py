@@ -65,23 +65,15 @@ class LicenseSearchFuture(object):
     def __init__(self, c_fut):
         self._c_fut = c_fut
 
-    def poll(self):
-        c_status = _AE_Status.new(_lib)
-        c_res = _AE_LicenseSearchResult.new(_lib)
-
-        _lib.AE_LicenseSearchFuture_Poll(self._c_fut.get(), c_res.get(),
-                                         c_status.get())
-        return self._process_result(c_status, c_res)
 
     def get(self):
         c_status = _AE_Status.new(_lib)
         c_res = _AE_LicenseSearchResult.new(_lib)
 
-        _lib.AE_LicenseSearch_Get(self._c_fut.get(), c_res.get(),
-                                  c_status.get())
-        return self._process_result(c_status, c_res)
+        _lib.AE_LicenseSearchFuture_Get(self._c_fut.get(), c_res.get(),
+                                        c_status.get())
+        AEError.check_status(c_status)
 
-    def _process_result(self, c_status, c_res):
         policies = {}
         c_territory = ctypes.c_char_p()
         c_policy = ctypes.c_int()
