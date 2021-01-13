@@ -6,7 +6,7 @@ from collections import namedtuple
 from enum import Enum
 
 from pexae.lib import _lib, _AE_Status, _AE_Fingerprint, \
-    _AE_LicenseSearchRequest, _AE_LicenseSearchResult
+    _AE_LicenseSearchRequest, _AE_LicenseSearchResult, _AE_LicenseSearchFuture
 from pexae.errors import AEError
 from pexae.common import Segment
 from pexae.asset_library import AssetType
@@ -48,7 +48,7 @@ class LicenseSearchResult(object):
 
 class LicenseSearchRequest(object):
     """ TODO """
-    
+
     def __init__(self, fingerprint):
         self._fingerprint = fingerprint
 
@@ -61,25 +61,27 @@ class LicenseSearchRequest(object):
         return "LicenseSearchRequest(fingerprint=...)"
 
 
-class LicenseSearch(object):
-    """ TODO """
-    
-    def __init__(self, c_search):
-        self._c_search = c_search
+class LicenseSearchFuture(object):
+    def __init__(self, c_fut):
+        self._c_fut = c_fut
 
-    def do(self, req):
-        """ TODO """
+    def poll(self):
         c_status = _AE_Status.new(_lib)
-        c_req = _AE_LicenseSearchRequest.new(_lib)
         c_res = _AE_LicenseSearchResult.new(_lib)
 
-        _lib.AE_LicenseSearchRequest_SetFingerprint(
-            c_req.get(), req.fingerprint._c_ft.get())
+        _lib.AE_LicenseSearchFuture_Poll(self._c_fut.get(), c_res.get(),
+                                         c_status.get())
+        return self._process_result(c_status, c_res)
 
-        _lib.AE_LicenseSearch_Do(self._c_search.get(), c_req.get(),
-                                  c_res.get(), c_status.get())
-        AEError.check_status(c_status)
+    def get(self):
+        c_status = _AE_Status.new(_lib)
+        c_res = _AE_LicenseSearchResult.new(_lib)
 
+        _lib.AE_LicenseSearch_Get(self._c_fut.get(), c_res.get(),
+                                  c_status.get())
+        return self._process_result(c_status, c_res)
+
+    def _process_result(self, c_status, c_res):
         policies = {}
         c_territory = ctypes.c_char_p()
         c_policy = ctypes.c_int()
@@ -99,3 +101,24 @@ class LicenseSearch(object):
             lookup_id=_lib.AE_LicenseSearchResult_GetLookupID(c_res.get()),
             completed_at=completed_at,
             policies=policies)
+
+
+class LicenseSearch(object):
+    """ TODO """
+
+    def __init__(self, c_search):
+        self._c_search = c_search
+
+    def start(self, req):
+        """ TODO """
+        c_status = _AE_Status.new(_lib)
+        c_req = _AE_LicenseSearchRequest.new(_lib)
+        c_fut = _AE_LicenseSearchFuture.new(_lib)
+
+        _lib.AE_LicenseSearchRequest_SetFingerprint(
+            c_req.get(), req.fingerprint._c_ft.get())
+
+        _lib.AE_LicenseSearch_Start(self._c_search.get(), c_req.get(),
+                                    c_fut.get(), c_status.get())
+        AEError.check_status(c_status)
+        return LicenseSearchFuture(c_fut)

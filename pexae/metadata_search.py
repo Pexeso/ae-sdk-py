@@ -7,7 +7,7 @@ from enum import Enum
 
 from pexae.lib import _lib, _AE_Status, _AE_Fingerprint, \
     _AE_MetadataSearchRequest, _AE_MetadataSearchResult, \
-    _AE_MetadataSearchMatch
+    _AE_MetadataSearchMatch, _AE_MetadataSearchFuture
 from pexae.errors import AEError
 from pexae.common import Segment
 from pexae.asset_library import AssetType
@@ -15,7 +15,7 @@ from pexae.asset_library import AssetType
 
 class MetadataSearchMatch(object):
     """ TODO """
-    
+
     def __init__(self, asset_id, asset_type, segments):
         self._asset_id = asset_id
         self._asset_type = asset_type
@@ -64,13 +64,13 @@ class MetadataSearchResult(object):
         return self._matches
 
     def __repr__(self):
-        return "MetadataSearchResult(lookup_id={},completed_at={},matches=...)".format(
-                self.lookup_id, self.completed_at)
+        return "MetadataSearchResult(lookup_id={},completed_at={},matches=<{} objects>)".format(
+                self.lookup_id, self.completed_at, len(self.matches))
 
 
 class MetadataSearchRequest(object):
     """ TODO """
-    
+
     def __init__(self, fingerprint):
         self._fingerprint = fingerprint
 
@@ -83,26 +83,32 @@ class MetadataSearchRequest(object):
         return "MetadataSearchRequest(fingerprint=...)"
 
 
-class MetadataSearch(object):
+class MetadataSearchFuture(object):
     """ TODO """
-    
-    def __init__(self, c_search):
-        self._c_search = c_search
 
-    def do(self, req):
-        """ TODO """
+    def __init__(self, c_fut):
+        self._c_fut = c_fut
+
+    def poll(self):
         c_status = _AE_Status.new(_lib)
-        c_req = _AE_MetadataSearchRequest.new(_lib)
         c_res = _AE_MetadataSearchResult.new(_lib)
 
-        _lib.AE_MetadataSearchRequest_SetFingerprint(
-            c_req.get(), req.fingerprint._c_ft.get())
+        _lib.AE_MetadataSearchFuture_Poll(self._c_fut.get(), c_res.get(),
+                                          c_status.get())
+        return self._process_result(c_status, c_res)
 
-        _lib.AE_MetadataSearch_Do(self._c_search.get(), c_req.get(),
-                                  c_res.get(), c_status.get())
+
+    def get(self):
+        c_status = _AE_Status.new(_lib)
+        c_res = _AE_MetadataSearchResult.new(_lib)
+
+        _lib.AE_MetadataSearchFuture_Get(self._c_fut.get(), c_res.get(),
+                                         c_status.get())
+        return self._process_result(c_status, c_res)
+
+    def _process_result(self, c_status, c_res):
         AEError.check_status(c_status)
 
-        # extract the result
         c_match = _AE_MetadataSearchMatch.new(_lib)
         c_matches_pos = ctypes.c_size_t(0)
 
@@ -121,6 +127,27 @@ class MetadataSearch(object):
             lookup_id=_lib.AE_MetadataSearchResult_GetLookupID(c_res.get()),
             completed_at=completed_at,
             matches=matches)
+
+
+class MetadataSearch(object):
+    """ TODO """
+
+    def __init__(self, c_search):
+        self._c_search = c_search
+
+    def start(self, req):
+        """ TODO """
+        c_status = _AE_Status.new(_lib)
+        c_req = _AE_MetadataSearchRequest.new(_lib)
+        c_fut = _AE_MetadataSearchFuture.new(_lib)
+
+        _lib.AE_MetadataSearchRequest_SetFingerprint(
+            c_req.get(), req.fingerprint._c_ft.get())
+
+        _lib.AE_MetadataSearch_Start(self._c_search.get(), c_req.get(),
+                                  c_fut.get(), c_status.get())
+        AEError.check_status(c_status)
+        return MetadataSearchFuture(c_fut)
 
 
 def _extract_metadata_search_segments(c_match):

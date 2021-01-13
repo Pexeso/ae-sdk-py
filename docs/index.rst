@@ -183,3 +183,32 @@ API reference
    :members:
 .. autoclass:: pexae.MetadataSearchMatch()
    :members:
+
+
+***************
+License search
+***************
+
+Now that the client is initialized and authenticated, you can start making
+license search requests:
+
+.. code-block:: python
+
+    req = pexae.LicenseSearchRequest(fingerprint=ft)
+    try:
+        res = client.license_search.do(req)
+        blocked = res.policies.get('US') == pexae.BasicPolicy.BLOCK
+        print("blocked in US: {}".format(blocked))
+    except pexae.AEError as err:
+        pass  # handle error
+
+
+API reference
+-------------
+
+.. autoclass:: pexae.LicenseSearch()
+   :members:
+.. autoclass:: pexae.LicenseSearchRequest
+   :members:
+.. autoclass:: pexae.LicenseSearchResult()
+   :members:
