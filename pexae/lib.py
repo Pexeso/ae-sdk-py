@@ -3,6 +3,7 @@
 import os
 import ctypes
 import ctypes.util
+import os
 
 
 class _SafeObject(object):
@@ -149,7 +150,14 @@ class _AE_AssetLicensors(ctypes.Structure):
 
 
 def _load_lib():
+    if os.getenv('PEXAE_NO_CORE_LIB') is not None:
+        # Defining PEXAE_NO_CORE_LIB makes this wrapper module import-able even without the shared library.
+        # Useful for generating documentation.
+        return ctypes.CDLL(None)
+
     name = ctypes.util.find_library("pexae")
+    if name is None:
+        raise RuntimeError('failed to find native library')
 
     try:
         lib = ctypes.CDLL(name)
