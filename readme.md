@@ -73,14 +73,25 @@ newft = pexae.Fingerprint.load(b)
 After the fingerprint is generated, you can use it to perform a metadata search.
 
 ```python
-req = pexae.MetadataSearchRequest(fingerprint=ft)
 try:
+    # First, you need to initialize a client.
+    client = pexae.Client(client_id, client_secret)
+
+    # Build the request.
+    req = pexae.MetadataSearchRequest(fingerprint=ft)
+
+    # Start the search.
     future = client.metadata_search.start(req)
-    # do something else in the meantime
+
+    # Do other stuff.
+
+    # Retrieve the result.
     res = future.get()
+
+    # Print the result.
     print("lookup {} returned {} matches".format(res.lookup_id, len(res.matches)))
 except pexae.AEError as err:
-    pass  # handle error
+    pass  # Handle error.
 ```
 
 
@@ -90,15 +101,25 @@ Performing a license search is very similar to metadata search.
 
 
 ```python
-req = pexae.LicenseSearchRequest(fingerprint=ft)
 try:
+    # ...
+
+    # Build the request.
+    req = pexae.LicenseSearchRequest(fingerprint=ft)
+
+    # Start the search.
     fut = client.license_search.start(req)
-    # do something else in the meantime
+
+    # Do other stuff.
+
+    # Retrieve the result.
     res = fut.get()
+
+    # Check the basic policy in the US.
     blocked = res.policies.get('US') == pexae.BasicPolicy.BLOCK
     print("blocked in US: {}".format(blocked))
 except pexae.AEError as err:
-    pass  # handle error
+    pass  # Handle error.
 ```
 
 The most significant difference between the searches currently is in the
@@ -112,8 +133,11 @@ You can use AssetLibrary to retrieve information about matched assets.
 
 ```python
 try:
-    asset = client.asset_library.get_asset(asset_id)
-    print("retrieved info about: {}".format(asset.metadata.title))
+    # After successful metadata search.
+
+    for match in res.matches:
+        asset = client.asset_library.get_asset(match.asset_id)
+        print("retrieved info about: {}".format(asset.metadata.title))
 except pexae.AEError as err:
-    pass  # handle error
+    pass  # Handle error.
 ```
