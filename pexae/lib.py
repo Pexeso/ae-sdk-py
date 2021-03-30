@@ -240,6 +240,14 @@ def _load_lib():
         ctypes.POINTER(_AE_Status)]
     lib.AE_Client_Init.restype = None
 
+    # AE_Mockserver
+    lib.AE_Mockserver_InitClient.argtypes = [
+        ctypes.POINTER(_AE_Client),
+        ctypes.c_char_p,
+        ctypes.c_char_p,
+        ctypes.POINTER(_AE_Status)]
+    lib.AE_Mockserver_InitClient.restype = None
+
     # AE_LicenseSearch
     lib.AE_LicenseSearch_New.argtypes = [ctypes.POINTER(_AE_Client)]
     lib.AE_LicenseSearch_New.restype = ctypes.POINTER(_AE_LicenseSearch)
