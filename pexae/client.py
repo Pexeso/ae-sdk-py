@@ -14,21 +14,9 @@ class Client(object):
     communicate with the Attribution Engine backend service. It
     automatically handles the connection and authentication with the
     service.
-
-    :param string client_id: this will be provided to you by Pex.
-    :param string client_secret: this will be provided to you by Pex.
-    :raise: :class:`AEError` if the connection cannot be established
-            or the provided authentication credentials are invalid.
     """
 
-    def __init__(self, client_id, client_secret):
-        c_status = _AE_Status.new(_lib)
-        c_client = _AE_Client.new(_lib)
-
-        _lib.AE_Client_Init(c_client.get(), client_id.encode(),
-                            client_secret.encode(), c_status.get())
-        AEError.check_status(c_status)
-
+    def __init__(self, c_client):
         c_asset_library = _AE_AssetLibrary.new(_lib, c_client.get())
         c_license_search = _AE_LicenseSearch.new(_lib, c_client.get())
         c_metadata_search = _AE_MetadataSearch.new(_lib, c_client.get())
@@ -37,6 +25,24 @@ class Client(object):
         self._asset_library = AssetLibrary(c_asset_library)
         self._license_search = LicenseSearch(c_license_search)
         self._metadata_search = MetadataSearch(c_metadata_search)
+
+    @staticmethod
+    def with_credentials(client_id, client_secret):
+        """
+        Creates a new instance of the class using provided credentials for authentication.
+
+        :param string client_id: this will be provided to you by Pex.
+        :param string client_secret: this will be provided to you by Pex.
+        :raise: :class:`AEError` if the connection cannot be established
+                or the provided authentication credentials are invalid.
+        """
+        c_status = _AE_Status.new(_lib)
+        c_client = _AE_Client.new(_lib)
+
+        _lib.AE_Client_Init(c_client.get(), client_id.encode(),
+                            client_secret.encode(), c_status.get())
+        AEError.check_status(c_status)
+        return Client(c_client)
 
     @property
     def asset_library(self):

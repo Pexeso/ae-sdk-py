@@ -12,6 +12,7 @@ You can find instruction on how to install the Python bindings on `this page </p
    fingerprinting
    error_handling
    client
+   mockserver
    asset_library
    metadata_search
    license_search
