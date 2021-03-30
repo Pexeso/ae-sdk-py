@@ -13,8 +13,8 @@ class Mockserver(object):
     @staticmethod
     def new_client(client_id, client_secret):
         """
-        Creates a new instance of the client using provided credentials
-        for authentication.
+        Creates a new instance of the client that will communicate with the
+        mockserver using provided credentials for authentication.
 
         :param string client_id: this can be found in the official mockserver documentation.
         :param string client_secret: this can be found in the official mockserver documentation.
