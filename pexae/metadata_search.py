@@ -15,9 +15,9 @@ from pexae.asset_library import AssetType
 
 class MetadataSearchRequest(object):
     """
-    Holds all data necessary to perform a metadata search. Currently, a search
-    can only be performed using a fingerprint, but more parameters can be
-    supported in the future.
+    Holds all data necessary to perform a metadata search. A search can only be
+    performed using a fingerprint, but additional parameters may be supported
+    in the future.
     """
 
     def __init__(self, fingerprint):
