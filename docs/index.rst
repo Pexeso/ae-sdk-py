@@ -9,6 +9,9 @@ Welcome to the Python bindings API reference for the Attribution Engine's SDK.
 You can find instruction on how to install the Python bindings on `this page </python/>`_.
 
 .. toctree::
+   :hidden:
+
+   self
    fingerprinting
    error_handling
    client

@@ -4,6 +4,7 @@ Asset library
 
 The asset library is used for retrieving information about assets:
 
+
 .. code-block:: python
 
     try:
