@@ -35,15 +35,15 @@ class AssetType(Enum):
 
     VIDEO = 2
     """
-    A copywritten audio-visual work.
+    A copyrighted audio-visual work.
     """
 
 
 class AssetMetadata(object):
     """
-    Metadata associated with an asset. Usually it comes as part of the
-    :class:`Asset` class which can be retrieved using the
-    :meth:`AssetLibrary.get_asset` method.
+    Metadata associated with an asset. It comes as part of the :class:`Asset`
+    class which can be retrieved using the :meth:`AssetLibrary.get_asset`
+    method.
     """
 
     def __init__(self, isrc, title, artists, upcs, licensors):
@@ -85,8 +85,8 @@ class AssetMetadata(object):
     @property
     def licensors(self):
         """
-        The entities that own the rights to the given UPC and are entitled to
-        license its use and collect royalties.
+        The entities that own the rights to the given intellectual property and
+        are entitled to license its use and collect royalties.
 
         It is a dictionary where the key is a territory code that conforms to
         the ISO 3166-1 alpha-2 standard. For more information visit

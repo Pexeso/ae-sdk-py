@@ -19,21 +19,22 @@ class BasicPolicy(Enum):
 
     ALLOW = 0
     """
-    The content should be allowed to be uploaded to the platform.
+    The content is allowed to be uploaded.
     """
 
     BLOCK = 1
     """
-    The content should not be allowed to be uploaded to the platform, because
-    it includes copyrighted content.
+    The content is not allowed to be uploaded. The Attribution Engine matched
+    it to copy written content whose licensor set a block policy on it for the
+    given territory and platform.
     """
 
 
 class LicenseSearchRequest(object):
     """
-    Holds all data necessary to perform a license search. Currently, a search
-    can only be performed using a fingerprint, but more parameters can be
-    supported in the future.
+    Holds all data necessary to perform a license search. A search can only be
+    performed using a fingerprint, but additional parameters may be supported
+    in the future.
     """
 
     def __init__(self, fingerprint):
@@ -42,7 +43,7 @@ class LicenseSearchRequest(object):
     @property
     def fingerprint(self):
         """
-        An fingerprint generated from a file or a byte buffer.
+        A fingerprint generated from a file or a byte buffer.
 
         :type: Fingerprint
         """
