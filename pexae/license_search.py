@@ -25,7 +25,7 @@ class BasicPolicy(Enum):
     BLOCK = 1
     """
     The content is not allowed to be uploaded. The Attribution Engine matched
-    it to copy written content whose licensor set a block policy on it for the
+    it to copyrighted content whose licensor set a block policy on it for the
     given territory and platform.
     """
 
