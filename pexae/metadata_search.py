@@ -42,9 +42,8 @@ class MetadataSearchMatch(object):
     the matched asset, and the matching segments.
     """
 
-    def __init__(self, asset_id, asset_type, segments):
+    def __init__(self, asset_id, segments):
         self._asset_id = asset_id
-        self._asset_type = asset_type
         self._segments = segments
 
     @property
@@ -59,15 +58,6 @@ class MetadataSearchMatch(object):
         return self._asset_id
 
     @property
-    def asset_type(self):
-        """
-        One of: recording, composition, video.
-
-        :type: AssetType
-        """
-        return self._asset_type
-
-    @property
     def segments(self):
         """
         A list of matching :class:`Segment` instances.
@@ -77,8 +67,8 @@ class MetadataSearchMatch(object):
         return self._segments
 
     def __repr__(self):
-        return "MetadataSearchMatch(asset_id={},asset_type={},segments={})".format(
-                self.asset_id, self.asset_type, self.segments)
+        return "MetadataSearchMatch(asset_id={},segments={})".format(
+                self.asset_id, self.segments)
 
 
 class MetadataSearchResult(object):
@@ -148,7 +138,6 @@ class MetadataSearchFuture(object):
                 c_res.get(), c_match.get(), ctypes.byref(c_matches_pos)):
             matches.append(MetadataSearchMatch(
                 asset_id=_lib.AE_MetadataSearchMatch_GetAssetID(c_match.get()),
-                asset_type=AssetType(_lib.AE_MetadataSearchMatch_GetAssetType(c_match.get())),
                 segments=_extract_metadata_search_segments(c_match)))
 
         return MetadataSearchResult(
