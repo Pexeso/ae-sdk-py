@@ -381,10 +381,6 @@ def _load_lib():
         ctypes.POINTER(_AE_MetadataSearchMatch)]
     lib.AE_MetadataSearchMatch_GetAssetID.restype = ctypes.c_uint64
 
-    lib.AE_MetadataSearchMatch_GetAssetType.argtypes = [
-        ctypes.POINTER(_AE_MetadataSearchMatch)]
-    lib.AE_MetadataSearchMatch_GetAssetType.restype = ctypes.c_int
-
     lib.AE_MetadataSearchMatch_NextSegment.argtypes = [
         ctypes.POINTER(_AE_MetadataSearchMatch),
         ctypes.POINTER(ctypes.c_int64),
@@ -415,6 +411,9 @@ def _load_lib():
 
     lib.AE_Asset_Delete.argtypes = [ctypes.POINTER(ctypes.POINTER(_AE_Asset))]
     lib.AE_Asset_Delete.restype = None
+
+    lib.AE_Asset_GetType.argtypes = [ctypes.POINTER(_AE_Asset)]
+    lib.AE_Asset_GetType.restype = ctypes.c_int
 
     lib.AE_Asset_GetMetadata.argtypes = [
         ctypes.POINTER(_AE_Asset),

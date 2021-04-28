@@ -105,8 +105,18 @@ class Asset(object):
     :meth:`AssetLibrary.get_asset` to retrieve an asset.
     """
 
-    def __init__(self, metadata):
+    def __init__(self, typ, metadata):
+        self._type = typ
         self._metadata = metadata
+
+    @property
+    def type(self):
+        """
+        One of: recording, composition, video.
+
+        :type: AssetType
+        """
+        return self._type
 
     @property
     def metadata(self):
@@ -117,7 +127,7 @@ class Asset(object):
         return self._metadata
 
     def __repr__(self):
-        return "Asset(metadata=...)"
+        return "Asset(type={},metadata=...)".format(self._type)
 
 
 class AssetLibrary(object):
@@ -150,13 +160,18 @@ class AssetLibrary(object):
         c_metadata = _AE_AssetMetadata.new(_lib)
         _lib.AE_Asset_GetMetadata(c_asset.get(), c_metadata.get())
 
-        return Asset(metadata=AssetMetadata(
+        metadata = AssetMetadata(
             isrc=_lib.AE_AssetMetadata_GetISRC(c_metadata.get()).decode(),
             title=_lib.AE_AssetMetadata_GetTitle(c_metadata.get()).decode(),
             artists=_extract_artists(c_metadata),
             upcs=_extract_upcs(c_metadata),
             licensors=_extract_licensors(c_metadata),
-        ))
+        )
+
+        return Asset(
+            typ=AssetType(_lib.AE_Asset_GetType(c_asset.get())),
+            metadata=metadata,
+        )
 
 
 def _extract_artists(c_metadata):
